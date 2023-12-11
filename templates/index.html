@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../static/styles.css" />
+    <script src="../static/script.js"></script>
+    <title>EMPLOYEE FORM</title>
+  </head>
+  <body>
+    <h1>EMPLOYEE FORM</h1>
+    <div class="container">
+      <form id="employeeForm" autocomplete="on">
+        <label for="id">Emp ID:</label>
+        <input type="text" id="id" name="id" required />
+
+        <label for="name"> Name:</label>
+        <input type="text" id="name" name="name" autocomplete="on" />
+
+        <label for="dob">Date of Birth:</label>
+        <input
+          type="date"
+          id="dob"
+          name="dob"
+          onchange="calculateAge()"
+          required
+        />
+
+        <label for="age"> AGE :</label>
+        <input type="number" id="age" name="age" required />
+
+        <label for="joiningDate">Joining Date:</label>
+        <input
+          type="date"
+          id="joiningDate"
+          name="joiningDate"
+          s
+          onchange="calculateExp()"
+          required
+        />
+
+        <label for="experience">Experience :</label>
+        <input type="number" id="experience" name="experience" required />
+
+        <label for="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          autocomplete="on"
+          required
+        />
+
+        <label for="phoneNumber">Phone Number:</label>
+        <input type="tel" id="phoneNumber" name="phoneNumber" required />
+
+        <button type="submit" onclick="submitForm()">Submit</button>
+        <button type="submit" onclick="resetForm()">Reset</button>
+      </form>
+    </div>
+    <!-- Table -->
+    <table id="employeeTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>DOB</th>
+          <th>Age</th>
+          <th>Joining Date</th>
+          <th>Experience</th>
+          <th>Mail</th>
+          <th>Phone Number</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Employee details will be added here dynamically -->
+      </tbody>
+    </table>
+    <script>
+      document
+        .getElementById("employeeForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const EMPLOYEEID = document.getElementById("id").value;
+          const NAME = document.getElementById("name").value;
+          const DOB = document.getElementById("dob").value;
+          const AGE = document.getElementById("age").value;
+          const JOININGDATE = document.getElementById("joiningDate").value;
+          const EXPERIENCE = document.getElementById("experience").value;
+          const EMAIL = document.getElementById("email").value;
+          const PhNo = document.getElementById("phoneNumber").value;
+
+          const employeeData = {
+            EMPLOYEEID,
+            NAME,
+            DOB,
+            AGE,
+            JOININGDATE,
+            EXPERIENCE,
+            EMAIL,
+            PhNo,
+          };
+
+          fetch("/add_employee", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(employeeData),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data.message); // Log success message
+              // You can perform actions after successful submission if needed
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              // Handle error
+            });
+        });
+      const formm = document.getElementById("employeeForm");
+    </script>
+  </body>
+</html>
