@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../static/styles.css" />
+    <script src="../static/script.js"></script>
+
+    <title>EMPLOYEE FORM</title>
+  </head>
+  <body>
+    <h1>EMPLOYEE FORM</h1>
+    <div class="container">
+      <form id="employeeForm" autocomplete="on">
+        <label for="id">Emp ID:</label>
+        <input class='req' type="number" id="id" name="id" onkeyup='enableSubmit()' required />
+
+        <label for="name"> Name:</label>
+        <input class='req' type="text" id="name" name="name" onkeyup='enableSubmit()' maxlength="30" autocomplete="on" />
+
+        <label for="gender"> GENDER:</label>
+        <label>
+          <input class='req' type="radio" name="gender" onkeyup='enableSubmit()' value="male"> Male
+        </label>
+        <label>
+          <input class='req' type="radio" name="gender" onkeyup='enableSubmit()' value="female"> Female
+        </label>
+        <label>
+          <input class='req' type="radio" name="gender" onkeyup='enableSubmit()' value="other"> Other
+        </label>
+
+        <label for="dob">Date of Birth:</label>
+        <input class='req' type="date" id="dob" onkeyup='enableSubmit()' name="dob" onchange="calculateAge()" required />
+
+        <label for="age"> AGE :</label>
+        <input class='req' type="number" onkeyup='enableSubmit()' id="age" name="age" required />
+
+        <label for="dept">Dept :</label>
+        <select name="dept" id="dept">
+          <option class='req' onkeyup='enableSubmit()' value="null"> choose...</option>
+          <option class='req' onkeyup='enableSubmit()' value="HR">HR</option>
+          <option class='req' onkeyup='enableSubmit()' value="finance">FINANCE</option>
+          <option class='req'  onkeyup='enableSubmit()' value="IT">IT</option>
+          <option class='req' onkeyup='enableSubmit()' value="testing">testing</option>
+        </select>
+
+        <label for="designation">Designation:</label>
+        <input class='req' type="text" onkeyup='enableSubmit()'  id="designation" name="designation" autocomplete="on" required />
+        <label for="salary">salary :</label>
+        <input class='req' type="tel" onkeyup='enableSubmit()' id="salary" name="salary" maxlength="8" required />
+
+        <input class="submit" type="submit" onclick="submission()" value="submit" disabled>
+      </form>
+    </div>
+    
+    <script>
+      function enableSubmit(){
+   let inputs = document.getElementsByClassName('req');
+   let btn = document.querySelector('input[type="submit"]');
+   let isValid = true;
+
+   for (var i = 0; i < inputs.length; i++){
+     let changedInput = inputs[i];
+     if (changedInput.value.trim() === "" || changedInput.value === null){
+       isValid = false;
+       break;
+     }
+   }
+   btn.disabled = !isValid;
+ }
+
+      document.getElementById("employeeForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const NAME = document.getElementById("name").value;
+        const ID = document.getElementById("id").value;
+        const GENDER = document.querySelector('input[name="gender"]:checked').value;
+        const DOB = document.getElementById("dob").value;
+        const AGE = document.getElementById("age").value;
+        const DEPARTMENT = document.getElementById("dept").value;
+        const DESIGNATION = document.getElementById("designation").value;
+        const SALARY = document.getElementById("salary").value;
+
+        const employeeData = {
+          NAME,
+          ID,
+          GENDER,
+          DOB,
+          AGE,
+          DEPARTMENT,
+          DESIGNATION,
+          SALARY,
+        };
+        console.log(employeeData);
+
+        fetch("/add_employee", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(employeeData),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data.message);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      });
+    </script>
+  </body>
+</html>
